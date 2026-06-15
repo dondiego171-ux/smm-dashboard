@@ -1,0 +1,40 @@
+{
+  "project": "АоТ — SMM Dashboard",
+  "timezone": "Europe/Moscow",
+
+  "_comment_accounts": "ID и адреса аккаунтов. Токены НЕ здесь — они в secrets.json.",
+  "networks": {
+    "vk": {
+      "enabled": true,
+      "group_id": "",
+      "_note": "Оставьте group_id пустым — сообщество определится автоматически по групповому токену. Или впишите числовой ID."
+    },
+    "telegram": {
+      "enabled": true,
+      "channel": "@artoftea",
+      "_note": "Источник Telegram — TGStat (tgstat_token в secrets.json)."
+    },
+    "youtube": {
+      "enabled": true,
+      "channel_id": "UCDayjH1CPNwCTg3vBOPcY0Q",
+      "_note": "channel_id начинается с UC..."
+    },
+    "site": {
+      "enabled": true,
+      "source": "roistat",
+      "_note": "Переходы из соцсетей через Roistat. api_key и project_id — в secrets.json."
+    },
+    "instagram": {
+      "enabled": false,
+      "ig_user_id": "",
+      "_note": "Выключен. Включите (enabled:true) и заполните ig_user_id, когда подключите Graph API."
+    }
+  },
+
+  "_comment_plan": "План на месяц по каждой соцсети и метрике. Прогресс сверяется с прошедшей долей месяца. Метрики: views, new_subs, reactions, engagement_rate (%), content (публикации), referrals (переходы).",
+  "plan": {
+    "vk":       { "views": 500000, "new_subs": 2000, "reactions": 15000, "engagement_rate": 4.0, "content": 60, "referrals": 3000 },
+    "telegram": { "views": 300000, "new_subs": 1500, "reactions": 8000,  "engagement_rate": 6.0, "content": 90, "referrals": 2000 },
+    "youtube":  { "views": 250000, "new_subs": 1000, "reactions": 6000,  "engagement_rate": 3.0, "content": 12, "referrals": 800  }
+  }
+}
