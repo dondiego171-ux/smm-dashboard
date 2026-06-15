@@ -48,16 +48,19 @@ def load_config():
 
 
 def load_history():
-    """-> snap[network][date][field] = float"""
+    """-> snap[network][date][field] = float.
+    Сначала читает history_seed.csv (исторические данные), затем metrics_history.csv
+    (живой сбор перезаписывает совпадающие значения)."""
     snap = defaultdict(lambda: defaultdict(dict))
-    if not os.path.exists(HISTORY):
-        return snap
-    with open(HISTORY, encoding="utf-8") as f:
-        for row in csv.DictReader(f):
-            try:
-                snap[row["network"]][row["date"]][row["field"]] = float(row["value"])
-            except (ValueError, KeyError):
-                continue
+    for path in (os.path.join(BASE, "history_seed.csv"), HISTORY):
+        if not os.path.exists(path):
+            continue
+        with open(path, encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                try:
+                    snap[row["network"]][row["date"]][row["field"]] = float(row["value"])
+                except (ValueError, KeyError):
+                    continue
     return snap
 
 
@@ -140,13 +143,13 @@ def build():
             series[key] = [daily.get(d, {}).get(key) for d in dates]
         series["subscribers"] = [daily.get(d, {}).get("subscribers") for d in dates]
 
-        # факт за текущий месяц
+        # факт за текущий месяц (None = данных пока нет, отличаем от настоящего 0)
         fact = {}
         for key, _, agg in METRICS:
             vals = [daily[d].get(key) for d in dates
                     if m_first.isoformat() <= d < m_next.isoformat() and daily[d].get(key) is not None]
             if not vals:
-                fact[key] = 0
+                fact[key] = None
             elif agg == "avg":
                 fact[key] = round(sum(vals) / len(vals), 2)
             else:
@@ -156,8 +159,8 @@ def build():
         progress = {}
         for key, _, _ in METRICS:
             pv = plan.get(key)
-            if pv:
-                progress[key] = round(fact.get(key, 0) / pv * 100, 1)
+            if pv and fact.get(key) is not None:
+                progress[key] = round(fact[key] / pv * 100, 1)
 
         subs_vals = [v for v in series["subscribers"] if v is not None]
         latest_subs = subs_vals[-1] if subs_vals else None
@@ -173,12 +176,13 @@ def build():
         }
 
         for key in ("views", "new_subs", "reactions", "content", "referrals"):
-            totals[key] += fact.get(key, 0)
+            totals[key] += (fact.get(key) or 0)
         if latest_subs:
             totals["subscribers"] += latest_subs
 
     dash = {
         "project": cfg.get("project", "SMM Dashboard"),
+        "refresh_url": (cfg.get("dashboard") or {}).get("refresh_url", ""),
         "generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         "current_month": today.strftime("%B %Y"),
         "time_progress": round(time_progress * 100, 1),
@@ -233,11 +237,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .bar{height:6px;border-radius:4px;background:#2a2f3d;margin-top:8px;overflow:hidden}
   .bar i{display:block;height:100%;border-radius:4px}
   .pf{font-size:10px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between}
-  canvas{margin-top:6px}
+  .chartbox{position:relative;height:130px;margin-top:6px;width:100%}
+  .chartbox canvas{position:absolute;inset:0}
   .empty{color:var(--muted);padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px}
   .legend-note{font-size:11px;color:var(--muted);margin-top:6px}
   footer{margin-top:36px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
   code{background:var(--panel2);padding:2px 6px;border-radius:5px}
+  .btn{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;
+    padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn:hover{background:#1d4ed8}
 </style>
 </head>
 <body>
@@ -246,7 +254,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <h1 id="title">SMM Dashboard</h1>
     <div class="sub" id="subtitle"></div>
   </div>
-  <div class="sub" id="genat"></div>
+  <div style="text-align:right">
+    <a id="refresh" class="btn" target="_blank" rel="noopener" style="display:none">🔄 Обновить данные</a>
+    <div class="sub" id="genat" style="margin-top:6px"></div>
+  </div>
 </header>
 <div id="timebar" class="timebar"></div>
 
@@ -272,6 +283,12 @@ const fmtMetric = (key,v) => v==null ? "—" : (key==="engagement_rate" ? v.toFi
 document.getElementById("title").textContent = DASH.project;
 document.getElementById("subtitle").textContent = "Сводный мониторинг · " + DASH.current_month;
 document.getElementById("genat").textContent = "Обновлено: " + DASH.generated_at;
+if(DASH.refresh_url){
+  const rb = document.getElementById("refresh");
+  rb.href = DASH.refresh_url;
+  rb.style.display = "inline-block";
+  rb.title = "Откроется страница запуска — нажмите там зелёную «Run workflow». Данные и так обновляются каждое утро.";
+}
 document.getElementById("timebar").innerHTML =
   `Прошло месяца: <b>${DASH.time_progress}%</b> (день ${DASH.day_of_month} из ${DASH.days_in_month}). ` +
   `Метрики план/факт сравнивайте с этой долей: если прогресс ≥ ${DASH.time_progress}% — идём в графике.`;
@@ -288,6 +305,15 @@ document.getElementById("totals").innerHTML = TOTALS.map(([k,l])=>
 const nets = Object.entries(DASH.networks);
 const grid = document.getElementById("grid");
 
+// Подсказка в первые дни: дневные приросты считаются по разнице дней
+const maxDays = Math.max(0, ...nets.map(([,d])=>(d.series.dates||[]).length));
+if(maxDays>0 && maxDays<2){
+  document.getElementById("timebar").innerHTML +=
+    `<br><span style="color:var(--warn)">Идёт первый день сбора.</span> ` +
+    `Дневные показатели (новые подписки, просмотры за день, новый контент) появятся со второго запуска — ` +
+    `они считаются как разница между днями. Абсолютные значения (подписчики, вовлечённость) видны уже сейчас.`;
+}
+
 if(!nets.length){
   grid.innerHTML = `<div class="empty">Пока нет данных.<br>Запустите <code>python3 seed_demo.py</code> для демо или <code>python3 collector.py</code> с реальными токенами, затем <code>python3 build_dashboard.py</code>.</div>`;
 }
@@ -302,10 +328,12 @@ nets.forEach(([net,d],idx)=>{
   DASH.metrics.forEach(({key,label})=>{
     const fact = d.fact[key]; const plan = d.plan[key]; const prog = d.progress[key];
     let bar = "";
-    if(plan){
-      const w = Math.min(100, prog||0);
-      bar = `<div class="bar"><i style="width:${w}%;background:${barColor(prog||0)}"></i></div>
-             <div class="pf"><span>${prog!=null?prog+"%":"—"}</span><span>план ${fmtMetric(key,plan)}</span></div>`;
+    if(plan && prog!=null){
+      const w = Math.min(100, prog);
+      bar = `<div class="bar"><i style="width:${w}%;background:${barColor(prog)}"></i></div>
+             <div class="pf"><span>${prog}%</span><span>план ${fmtMetric(key,plan)}</span></div>`;
+    } else if(plan){
+      bar = `<div class="pf"><span>нет данных</span><span>план ${fmtMetric(key,plan)}</span></div>`;
     }
     mh += `<div class="m"><div class="ml">${label}</div>
            <div class="mv">${fmtMetric(key,fact)}</div>${bar}</div>`;
@@ -313,7 +341,7 @@ nets.forEach(([net,d],idx)=>{
   card.innerHTML = `<h3><span class="dot" style="background:${d.color}"></span>${d.label}</h3>
     <div class="subs">${subsLine}</div>
     <div class="metrics">${mh}</div>
-    <canvas id="c_${net}" height="120"></canvas>
+    <div class="chartbox"><canvas id="c_${net}"></canvas></div>
     <div class="legend-note">Динамика просмотров за день</div>`;
   grid.appendChild(card);
 
@@ -322,12 +350,13 @@ nets.forEach(([net,d],idx)=>{
     type:"line",
     data:{ labels:s.dates.map(x=>x.slice(5)),
       datasets:[{ data:s.views, borderColor:d.color, backgroundColor:d.color+"22",
-        fill:true, tension:.35, pointRadius:0, borderWidth:2 }]},
-    options:{ plugins:{legend:{display:false}},
+        fill:true, tension:.35, pointRadius:(s.dates.length<=3?3:0), borderWidth:2,
+        spanGaps:true }]},
+    options:{ responsive:true, maintainAspectRatio:false, animation:false, resizeDelay:200,
+      plugins:{legend:{display:false}},
       scales:{ x:{grid:{display:false},ticks:{color:"#9aa0ad",maxTicksLimit:6,font:{size:10}}},
                y:{grid:{color:"#2a2f3d"},ticks:{color:"#9aa0ad",font:{size:10},
-                  callback:v=>v>=1000?(v/1000)+"k":v}}},
-      maintainAspectRatio:false }
+                  callback:v=>v>=1000?(v/1000)+"k":v}}} }
   });
 });
 </script>

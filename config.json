@@ -1,6 +1,10 @@
 {
   "project": "АоТ — SMM Dashboard",
   "timezone": "Europe/Moscow",
+  "dashboard": {
+    "refresh_url": "https://github.com/dondiego171-ux/smm-dashboard/actions/workflows/daily.yml",
+    "_note": "Ссылка на запуск обновления (страница Actions). Кнопка «Обновить данные» ведёт сюда."
+  },
 
   "_comment_accounts": "ID и адреса аккаунтов. Токены НЕ здесь — они в secrets.json.",
   "networks": {
