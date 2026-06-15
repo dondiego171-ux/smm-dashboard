@@ -35,11 +35,15 @@
   .bar{height:6px;border-radius:4px;background:#2a2f3d;margin-top:8px;overflow:hidden}
   .bar i{display:block;height:100%;border-radius:4px}
   .pf{font-size:10px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between}
-  canvas{margin-top:6px}
+  .chartbox{position:relative;height:130px;margin-top:6px;width:100%}
+  .chartbox canvas{position:absolute;inset:0}
   .empty{color:var(--muted);padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px}
   .legend-note{font-size:11px;color:var(--muted);margin-top:6px}
   footer{margin-top:36px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
   code{background:var(--panel2);padding:2px 6px;border-radius:5px}
+  .btn{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;
+    padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn:hover{background:#1d4ed8}
 </style>
 </head>
 <body>
@@ -48,7 +52,10 @@
     <h1 id="title">SMM Dashboard</h1>
     <div class="sub" id="subtitle"></div>
   </div>
-  <div class="sub" id="genat"></div>
+  <div style="text-align:right">
+    <a id="refresh" class="btn" target="_blank" rel="noopener" style="display:none">🔄 Обновить данные</a>
+    <div class="sub" id="genat" style="margin-top:6px"></div>
+  </div>
 </header>
 <div id="timebar" class="timebar"></div>
 
@@ -64,7 +71,7 @@
 </footer>
 
 <script>
-const DASH = {"project": "АоТ — SMM Dashboard", "generated_at": "2026-06-15 09:11", "current_month": "June 2026", "time_progress": 50.0, "day_of_month": 15, "days_in_month": 30, "networks": {"vk": {"label": "VK", "color": "#4a76a8", "series": {"dates": ["2026-06-15"], "views": [null], "new_subs": [null], "reactions": [null], "engagement_rate": [null], "content": [null], "referrals": [null], "subscribers": [23189.0]}, "fact": {"views": 0, "new_subs": 0, "reactions": 0, "engagement_rate": 0, "content": 0, "referrals": 0}, "plan": {"views": 500000, "new_subs": 2000, "reactions": 15000, "engagement_rate": 4.0, "content": 60, "referrals": 3000}, "progress": {"views": 0.0, "new_subs": 0.0, "reactions": 0.0, "engagement_rate": 0.0, "content": 0.0, "referrals": 0.0}, "latest_subscribers": 23189.0}, "telegram": {"label": "Telegram", "color": "#2aabee", "series": {"dates": ["2026-06-15"], "views": [3563.0], "new_subs": [null], "reactions": [null], "engagement_rate": [2.23], "content": [null], "referrals": [null], "subscribers": [13144.0]}, "fact": {"views": 3563.0, "new_subs": 0, "reactions": 0, "engagement_rate": 2.23, "content": 0, "referrals": 0}, "plan": {"views": 300000, "new_subs": 1500, "reactions": 8000, "engagement_rate": 6.0, "content": 90, "referrals": 2000}, "progress": {"views": 1.2, "new_subs": 0.0, "reactions": 0.0, "engagement_rate": 37.2, "content": 0.0, "referrals": 0.0}, "latest_subscribers": 13144.0}, "youtube": {"label": "YouTube", "color": "#ff0000", "series": {"dates": ["2026-06-15"], "views": [null], "new_subs": [null], "reactions": [null], "engagement_rate": [null], "content": [null], "referrals": [null], "subscribers": [91500.0]}, "fact": {"views": 0, "new_subs": 0, "reactions": 0, "engagement_rate": 0, "content": 0, "referrals": 0}, "plan": {"views": 250000, "new_subs": 1000, "reactions": 6000, "engagement_rate": 3.0, "content": 12, "referrals": 800}, "progress": {"views": 0.0, "new_subs": 0.0, "reactions": 0.0, "engagement_rate": 0.0, "content": 0.0, "referrals": 0.0}, "latest_subscribers": 91500.0}}, "totals": {"views": 3563.0, "new_subs": 0.0, "reactions": 0.0, "content": 0.0, "referrals": 0.0, "subscribers": 127833.0}, "metrics": [{"key": "views", "label": "Просмотры", "agg": "sum"}, {"key": "new_subs", "label": "Новые подписки", "agg": "sum"}, {"key": "reactions", "label": "Реакции", "agg": "sum"}, {"key": "engagement_rate", "label": "Вовлечённость", "agg": "avg"}, {"key": "content", "label": "Контент", "agg": "sum"}, {"key": "referrals", "label": "Переходы", "agg": "sum"}]};
+const DASH = {"project": "АоТ — SMM Dashboard", "refresh_url": "https://github.com/dondiego171-ux/smm-dashboard/actions/workflows/daily.yml", "generated_at": "2026-06-15 11:36", "current_month": "June 2026", "time_progress": 50.0, "day_of_month": 15, "days_in_month": 30, "networks": {"vk": {"label": "VK", "color": "#4a76a8", "series": {"dates": ["2026-06-15"], "views": [null], "new_subs": [null], "reactions": [null], "engagement_rate": [null], "content": [null], "referrals": [null], "subscribers": [23189.0]}, "fact": {"views": null, "new_subs": null, "reactions": null, "engagement_rate": null, "content": null, "referrals": null}, "plan": {"views": 500000, "new_subs": 2000, "reactions": 15000, "engagement_rate": 4.0, "content": 60, "referrals": 3000}, "progress": {}, "latest_subscribers": 23189.0}, "telegram": {"label": "Telegram", "color": "#2aabee", "series": {"dates": ["2026-06-15"], "views": [3563.0], "new_subs": [null], "reactions": [null], "engagement_rate": [2.23], "content": [null], "referrals": [null], "subscribers": [13144.0]}, "fact": {"views": 3563.0, "new_subs": null, "reactions": null, "engagement_rate": 2.23, "content": null, "referrals": null}, "plan": {"views": 300000, "new_subs": 1500, "reactions": 8000, "engagement_rate": 6.0, "content": 90, "referrals": 2000}, "progress": {"views": 1.2, "engagement_rate": 37.2}, "latest_subscribers": 13144.0}, "youtube": {"label": "YouTube", "color": "#ff0000", "series": {"dates": ["2026-06-15"], "views": [null], "new_subs": [null], "reactions": [null], "engagement_rate": [null], "content": [null], "referrals": [null], "subscribers": [91500.0]}, "fact": {"views": null, "new_subs": null, "reactions": null, "engagement_rate": null, "content": null, "referrals": null}, "plan": {"views": 250000, "new_subs": 1000, "reactions": 6000, "engagement_rate": 3.0, "content": 12, "referrals": 800}, "progress": {}, "latest_subscribers": 91500.0}, "site": {"label": "Сайт (переходы)", "color": "#22c55e", "series": {"dates": ["2026-06-15"], "views": [null], "new_subs": [null], "reactions": [null], "engagement_rate": [null], "content": [null], "referrals": [21.0], "subscribers": [null]}, "fact": {"views": null, "new_subs": null, "reactions": null, "engagement_rate": null, "content": null, "referrals": 21.0}, "plan": {}, "progress": {}, "latest_subscribers": null}}, "totals": {"views": 3563.0, "new_subs": 0.0, "reactions": 0.0, "content": 0.0, "referrals": 21.0, "subscribers": 127833.0}, "metrics": [{"key": "views", "label": "Просмотры", "agg": "sum"}, {"key": "new_subs", "label": "Новые подписки", "agg": "sum"}, {"key": "reactions", "label": "Реакции", "agg": "sum"}, {"key": "engagement_rate", "label": "Вовлечённость", "agg": "avg"}, {"key": "content", "label": "Контент", "agg": "sum"}, {"key": "referrals", "label": "Переходы", "agg": "sum"}]};
 
 const fmt = n => n==null ? "—" :
   (Math.abs(n)>=1000 ? n.toLocaleString("ru-RU",{maximumFractionDigits:0})
@@ -74,6 +81,12 @@ const fmtMetric = (key,v) => v==null ? "—" : (key==="engagement_rate" ? v.toFi
 document.getElementById("title").textContent = DASH.project;
 document.getElementById("subtitle").textContent = "Сводный мониторинг · " + DASH.current_month;
 document.getElementById("genat").textContent = "Обновлено: " + DASH.generated_at;
+if(DASH.refresh_url){
+  const rb = document.getElementById("refresh");
+  rb.href = DASH.refresh_url;
+  rb.style.display = "inline-block";
+  rb.title = "Откроется страница запуска — нажмите там зелёную «Run workflow». Данные и так обновляются каждое утро.";
+}
 document.getElementById("timebar").innerHTML =
   `Прошло месяца: <b>${DASH.time_progress}%</b> (день ${DASH.day_of_month} из ${DASH.days_in_month}). ` +
   `Метрики план/факт сравнивайте с этой долей: если прогресс ≥ ${DASH.time_progress}% — идём в графике.`;
@@ -90,6 +103,15 @@ document.getElementById("totals").innerHTML = TOTALS.map(([k,l])=>
 const nets = Object.entries(DASH.networks);
 const grid = document.getElementById("grid");
 
+// Подсказка в первые дни: дневные приросты считаются по разнице дней
+const maxDays = Math.max(0, ...nets.map(([,d])=>(d.series.dates||[]).length));
+if(maxDays>0 && maxDays<2){
+  document.getElementById("timebar").innerHTML +=
+    `<br><span style="color:var(--warn)">Идёт первый день сбора.</span> ` +
+    `Дневные показатели (новые подписки, просмотры за день, новый контент) появятся со второго запуска — ` +
+    `они считаются как разница между днями. Абсолютные значения (подписчики, вовлечённость) видны уже сейчас.`;
+}
+
 if(!nets.length){
   grid.innerHTML = `<div class="empty">Пока нет данных.<br>Запустите <code>python3 seed_demo.py</code> для демо или <code>python3 collector.py</code> с реальными токенами, затем <code>python3 build_dashboard.py</code>.</div>`;
 }
@@ -104,10 +126,12 @@ nets.forEach(([net,d],idx)=>{
   DASH.metrics.forEach(({key,label})=>{
     const fact = d.fact[key]; const plan = d.plan[key]; const prog = d.progress[key];
     let bar = "";
-    if(plan){
-      const w = Math.min(100, prog||0);
-      bar = `<div class="bar"><i style="width:${w}%;background:${barColor(prog||0)}"></i></div>
-             <div class="pf"><span>${prog!=null?prog+"%":"—"}</span><span>план ${fmtMetric(key,plan)}</span></div>`;
+    if(plan && prog!=null){
+      const w = Math.min(100, prog);
+      bar = `<div class="bar"><i style="width:${w}%;background:${barColor(prog)}"></i></div>
+             <div class="pf"><span>${prog}%</span><span>план ${fmtMetric(key,plan)}</span></div>`;
+    } else if(plan){
+      bar = `<div class="pf"><span>нет данных</span><span>план ${fmtMetric(key,plan)}</span></div>`;
     }
     mh += `<div class="m"><div class="ml">${label}</div>
            <div class="mv">${fmtMetric(key,fact)}</div>${bar}</div>`;
@@ -115,7 +139,7 @@ nets.forEach(([net,d],idx)=>{
   card.innerHTML = `<h3><span class="dot" style="background:${d.color}"></span>${d.label}</h3>
     <div class="subs">${subsLine}</div>
     <div class="metrics">${mh}</div>
-    <canvas id="c_${net}" height="120"></canvas>
+    <div class="chartbox"><canvas id="c_${net}"></canvas></div>
     <div class="legend-note">Динамика просмотров за день</div>`;
   grid.appendChild(card);
 
@@ -124,12 +148,13 @@ nets.forEach(([net,d],idx)=>{
     type:"line",
     data:{ labels:s.dates.map(x=>x.slice(5)),
       datasets:[{ data:s.views, borderColor:d.color, backgroundColor:d.color+"22",
-        fill:true, tension:.35, pointRadius:0, borderWidth:2 }]},
-    options:{ plugins:{legend:{display:false}},
+        fill:true, tension:.35, pointRadius:(s.dates.length<=3?3:0), borderWidth:2,
+        spanGaps:true }]},
+    options:{ responsive:true, maintainAspectRatio:false, animation:false, resizeDelay:200,
+      plugins:{legend:{display:false}},
       scales:{ x:{grid:{display:false},ticks:{color:"#9aa0ad",maxTicksLimit:6,font:{size:10}}},
                y:{grid:{color:"#2a2f3d"},ticks:{color:"#9aa0ad",font:{size:10},
-                  callback:v=>v>=1000?(v/1000)+"k":v}}},
-      maintainAspectRatio:false }
+                  callback:v=>v>=1000?(v/1000)+"k":v}}} }
   });
 });
 </script>

@@ -3,3 +3,9 @@
 2026-06-15 09:11:04  [+] youtube: {'subscribers': 91500, 'views_total': 26331874, 'content_total': 769}
 2026-06-15 09:11:06  [-] site: пропущено — 'list' object has no attribute 'get'
 2026-06-15 09:11:06  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
+2026-06-15 11:36:10  [+] vk: {'subscribers': 23189}
+2026-06-15 11:36:10  [+] telegram: {'subscribers': 13144, 'views_day': 3563, 'content_total': 1791, 'engagement_rate_day': 2.23}
+2026-06-15 11:36:10  [+] youtube: {'subscribers': 91500, 'views_total': 26331874, 'content_total': 769}
+2026-06-15 11:36:12  [i] roistat каналы за 2026-06-14: прямые визиты=407, seo seo=844, :utm:tg tg=16, :utm:vk vk=1, direct3 яндекс.директ=357, site визиты с сайтов=30, :utm:telegram telegram=12, :utm:article article=1, :utm:inst inst=1, :utm:followish followish=2, :utm:youtube youtube=6, :utm:vkontakte vkontakte=2, :utm:mindbox mindbox=39, :utm:site site=21
+2026-06-15 11:36:12  [+] site: {'referrals_day': 21}
+2026-06-15 11:36:12  [=] Готово. Соцсетей собрано: 4. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
