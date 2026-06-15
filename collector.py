@@ -235,6 +235,56 @@ def collect_instagram(cfg, sec):
     return {"subscribers": r.get("followers_count"), "content_total": r.get("media_count")}
 
 
+def _roistat_rows(r):
+    """Находит список строк отчёта в ответе Roistat при разных формах структуры."""
+    if not isinstance(r, dict):
+        return []
+    d = r.get("data")
+    if isinstance(d, list) and d:
+        if isinstance(d[0], dict) and isinstance(d[0].get("items"), list):
+            return d[0]["items"]
+        return d
+    resp = r.get("response")
+    if isinstance(resp, dict):
+        for k in ("items", "data", "rows"):
+            if isinstance(resp.get(k), list):
+                return resp[k]
+    if isinstance(r.get("items"), list):
+        return r["items"]
+    return []
+
+
+def _roistat_dim_name(it):
+    dm = it.get("dimensions")
+    parts = []
+    if isinstance(dm, dict):
+        cells = dm.values()
+    elif isinstance(dm, list):
+        cells = dm
+    else:
+        cells = []
+    for c in cells:
+        if isinstance(c, dict):
+            parts.append(str(c.get("value", "")))
+            parts.append(str(c.get("title", "")))
+    return " ".join(parts).strip()
+
+
+def _roistat_visits(it):
+    m = it.get("metrics")
+    cell = None
+    if isinstance(m, dict):
+        cell = m.get("visits")
+    elif isinstance(m, list) and m:
+        cell = m[0]
+    if isinstance(cell, dict):
+        cell = cell.get("value", 0)
+    try:
+        return int(float(cell))
+    except (TypeError, ValueError):
+        return 0
+
+
 def collect_site(cfg, sec):
     src = cfg.get("source", "metrika")
     y = dt.date.today() - dt.timedelta(days=1)
@@ -268,30 +318,33 @@ def collect_site(cfg, sec):
         r = http_post_json("https://cloud.roistat.com/api/v1/project/analytics/data",
                            params={"project": project}, body=body,
                            headers={"Api-key": key})
-        data = r.get("data")
-        items = data[0].get("items", []) if isinstance(data, list) and data else []
+
+        # Устойчивый разбор: структура ответа Roistat может отличаться по версиям.
+        rows = _roistat_rows(r)
         SOCIAL = ("social", "соц", "vk", "вконтакте", "telegram", "телеграм",
                   "instagram", "facebook", "youtube", "ok.ru", "одноклассник",
                   "tiktok", "дзен", "zen")
         total = 0
         breakdown = []
-        for it in items:
-            dim = it.get("dimensions", {}).get("marker_level_1", {})
-            name = str(dim.get("value", "")).lower()
-            title = str(dim.get("title", "")).lower()
-            try:
-                visits = int(float(it.get("metrics", {}).get("visits", {}).get("value", 0)))
-            except (TypeError, ValueError):
-                visits = 0
-            breakdown.append((title or name, visits))
-            if any(s in name or s in title for s in SOCIAL):
+        for it in rows:
+            if not isinstance(it, dict):
+                continue
+            name = _roistat_dim_name(it).lower()
+            visits = _roistat_visits(it)
+            breakdown.append((name[:30], visits))
+            if any(s in name for s in SOCIAL):
                 total += visits
+
         if breakdown:
             log("[i] roistat каналы за " + str(y) + ": " +
                 ", ".join(f"{n}={v}" for n, v in breakdown[:15]))
-        if total == 0 and breakdown:
-            log("[i] roistat: соцканалы не распознаны по названиям — посмотрите список каналов выше "
-                "и при необходимости расширьте список SOCIAL в collect_site().")
+            if total == 0:
+                log("[i] roistat: соцканалы не распознаны по названиям — посмотрите список выше, "
+                    "при необходимости расширю фильтр SOCIAL.")
+        else:
+            import json as _json
+            log("[i] roistat: не удалось разобрать ответ. Сырой ответ (для отладки): "
+                + _json.dumps(r, ensure_ascii=False)[:700])
         return {"referrals_day": total}
 
     raise RuntimeError(f"источник '{src}' не поддерживается")
