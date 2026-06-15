@@ -1,0 +1,56 @@
+name: SMM Dashboard — ежедневное обновление
+
+on:
+  schedule:
+    - cron: "30 4 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать репозиторий
+        uses: actions/checkout@v4
+
+      - name: Поставить Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Установить telethon (нужен только для Telegram MTProto)
+        continue-on-error: true
+        run: pip install telethon
+
+      - name: Собрать secrets.json из GitHub Secrets
+        env:
+          VK_TOKEN: ${{ secrets.VK_TOKEN }}
+          TGSTAT_TOKEN: ${{ secrets.TGSTAT_TOKEN }}
+          TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
+          TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
+          TELEGRAM_SESSION: ${{ secrets.TELEGRAM_SESSION }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+          METRIKA_TOKEN: ${{ secrets.METRIKA_TOKEN }}
+          ROISTAT_API_KEY: ${{ secrets.ROISTAT_API_KEY }}
+          ROISTAT_PROJECT_ID: ${{ secrets.ROISTAT_PROJECT_ID }}
+        run: python3 ci_make_secrets.py
+
+      - name: Собрать данные по API
+        run: python3 collector.py
+
+      - name: Пересобрать дашборд
+        run: |
+          python3 build_dashboard.py
+          cp dashboard.html index.html
+
+      - name: Сохранить результат в репозиторий
+        run: |
+          git config user.name "smm-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/metrics_history.csv data/collector.log dashboard.html index.html
+          git commit -m "Авто-обновление $(date -u +%Y-%m-%d)" || echo "Изменений нет"
+          git push
