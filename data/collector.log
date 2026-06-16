@@ -27,3 +27,9 @@
 2026-06-15 13:29:55  [i] roistat каналы за 2026-06-14: прямые визиты=407, seo seo=844, :utm:tg tg=16, :utm:vk vk=1, direct3 яндекс.директ=357, site визиты с сайтов=30, :utm:telegram telegram=12, :utm:article article=1, :utm:inst inst=1, :utm:followish followish=2, :utm:youtube youtube=6, :utm:vkontakte vkontakte=2, :utm:mindbox mindbox=39, :utm:site site=21
 2026-06-15 13:29:55  [+] site: {'referrals_day': 21}
 2026-06-15 13:29:55  [=] Готово. Соцсетей собрано: 4. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
+2026-06-16 09:40:12  [+] vk: {'subscribers': 23189}
+2026-06-16 09:40:13  [+] telegram: {'subscribers': 13144, 'views_day': 3564, 'content_total': 1793, 'engagement_rate_day': 2.25}
+2026-06-16 09:40:13  [+] youtube: {'subscribers': 91500, 'views_total': 26344751, 'content_total': 769}
+2026-06-16 09:40:15  [i] roistat каналы за 2026-06-15: прямые визиты=351, seo seo=874, :utm:tg tg=9, :utm:vk vk=1, direct3 яндекс.директ=402, site визиты с сайтов=17, :utm:telegram telegram=7, :utm:article article=1, :utm:inst inst=3, :utm:rythm rythm=2, :utm:chatgpt.com chatgpt.com=3, :utm:followish followish=2, :utm:youtube youtube=12, :utm:vkontakte vkontakte=4, :utm:mindbox mindbox=36
+2026-06-16 09:40:15  [+] site: {'referrals_day': 24}
+2026-06-16 09:40:15  [=] Готово. Соцсетей собрано: 4. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
