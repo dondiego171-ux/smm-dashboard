@@ -57,3 +57,9 @@
 2026-06-20 08:02:36  [i] roistat каналы за 2026-06-19: прямые визиты=311, seo seo=711, :utm:tg tg=49, :utm:vk vk=8, direct1 яндекс.директ=2, direct3 яндекс.директ=418, site визиты с сайтов=23, :utm:yt yt=4, :utm:telegram telegram=5, :utm:inst inst=4, :utm:rythm rythm=1, :utm:site amp site amp=1, :utm:chatgpt.com chatgpt.com=1, :utm:followish followish=1, :utm:youtube youtube=8
 2026-06-20 08:02:36  [+] site: {'referrals_day': 21}
 2026-06-20 08:02:36  [=] Готово. Соцсетей собрано: 4. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
+2026-06-21 08:46:01  [+] vk: {'subscribers': 23190}
+2026-06-21 08:46:02  [+] telegram: {'subscribers': 13236, 'views_day': 3618, 'content_total': 1813, 'engagement_rate_day': 2.38}
+2026-06-21 08:46:02  [+] youtube: {'subscribers': 91500, 'views_total': 26378649, 'content_total': 770}
+2026-06-21 08:46:05  [i] roistat каналы за 2026-06-20: прямые визиты=353, seo seo=721, :utm:tg tg=10, :utm:vk vk=3, direct1 яндекс.директ=3, direct3 яндекс.директ=361, site визиты с сайтов=17, :utm:yt yt=3, :utm:telegram telegram=2, :utm:article article=2, :utm:inst inst=2, :utm:chatgpt.com chatgpt.com=1, :utm:ohmywishes ohmywishes=2, :utm:followish followish=1, :utm:youtube youtube=3
+2026-06-21 08:46:05  [+] site: {'referrals_day': 9}
+2026-06-21 08:46:05  [=] Готово. Соцсетей собрано: 4. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
