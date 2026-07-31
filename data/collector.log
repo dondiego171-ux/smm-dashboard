@@ -297,3 +297,9 @@
 2026-07-30 07:11:49  [i] roistat: не удалось разобрать ответ. Сырой ответ (для отладки): {"status": "error", "error": "option_not_paid", "description": "Функция не оплачена. Пополните баланс.", "details": {"option": "analytics"}}
 2026-07-30 07:11:49  [+] site: {'referrals_day': 0}
 2026-07-30 07:11:49  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
+2026-07-31 07:21:25  [+] vk: {'subscribers': 23272}
+2026-07-31 07:21:25  [-] telegram: пропущено — tgstat: no_active_subscription
+2026-07-31 07:21:25  [+] youtube: {'subscribers': 91700, 'views_total': 26731818, 'content_total': 787}
+2026-07-31 07:21:27  [i] roistat каналы за 2026-07-30: прямые визиты=346, seo seo=771, :utm:tg tg=45, :utm:vk vk=5, direct3 яндекс.директ=4, site визиты с сайтов=52, :utm:yt yt=4, :utm:sms sms=1, :utm:telegram telegram=3, :utm:article article=1, :utm:inst inst=6, :utm:rythm rythm=1, :utm:chatgpt.com chatgpt.com=2, :utm:ohmywishes ohmywishes=2, :utm:followish followish=1
+2026-07-31 07:21:27  [+] site: {'referrals_day': 17}
+2026-07-31 07:21:27  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
