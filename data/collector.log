@@ -309,3 +309,9 @@
 2026-08-01 07:01:46  [i] roistat каналы за 2026-07-31: прямые визиты=296, seo seo=547, :utm:tg tg=22, :utm:vk vk=2, direct1 яндекс.директ=2, site визиты с сайтов=29, :utm:yt yt=4, :utm:article article=1, :utm:inst inst=9, :utm:youtube youtube=6, :utm:vkontakte vkontakte=1, :utm:mindbox mindbox=4, :utm:site site=8, :utm:collaboration collaborati=1
 2026-08-01 07:01:46  [+] site: {'referrals_day': 9}
 2026-08-01 07:01:46  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
+2026-08-02 07:07:16  [+] vk: {'subscribers': 23282}
+2026-08-02 07:07:16  [-] telegram: пропущено — tgstat: no_active_subscription
+2026-08-02 07:07:17  [+] youtube: {'subscribers': 91700, 'views_total': 26737094, 'content_total': 787}
+2026-08-02 07:07:18  [i] roistat каналы за 2026-08-01: прямые визиты=329, seo seo=686, :utm:tg tg=12, :utm:vk vk=2, direct1 яндекс.директ=2, site визиты с сайтов=25, :utm:telegram telegram=1, :utm:article article=1, :utm:inst inst=2, :utm:ohmywishes ohmywishes=1, :utm:youtube youtube=8, :utm:mindbox mindbox=2, :utm:post post=1, :utm:site site=18, :utm:yandex yandex=1
+2026-08-02 07:07:18  [+] site: {'referrals_day': 11}
+2026-08-02 07:07:18  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
