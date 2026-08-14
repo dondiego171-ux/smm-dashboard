@@ -381,3 +381,9 @@
 2026-08-13 05:56:11  [i] roistat: не удалось разобрать ответ. Сырой ответ (для отладки): {"status": "error", "error": "access_denied", "description": "У вас нет прав доступа к этому разделу."}
 2026-08-13 05:56:11  [+] site: {'referrals_day': 0}
 2026-08-13 05:56:11  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
+2026-08-14 05:55:01  [+] vk: {'subscribers': 23301}
+2026-08-14 05:55:01  [-] telegram: пропущено — tgstat: no_active_subscription
+2026-08-14 05:55:01  [+] youtube: {'subscribers': 91700, 'views_total': 26823598, 'content_total': 795}
+2026-08-14 05:55:02  [i] roistat: не удалось разобрать ответ. Сырой ответ (для отладки): {"status": "error", "error": "access_denied", "description": "У вас нет прав доступа к этому разделу."}
+2026-08-14 05:55:02  [+] site: {'referrals_day': 0}
+2026-08-14 05:55:02  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
