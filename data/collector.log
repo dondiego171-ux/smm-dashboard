@@ -1002,3 +1002,8 @@
 2026-11-25 14:46:50  [i] roistat: не удалось разобрать ответ. Сырой ответ (для отладки): {"status": "error", "error": "access_denied", "description": "У вас нет прав доступа к этому разделу."}
 2026-11-25 14:46:50  [+] site: {'referrals_day': 0}
 2026-11-25 14:46:50  [=] Готово. Соцсетей собрано: 3. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
+2026-11-26 14:11:48  [+] vk: {'subscribers': 23542}
+2026-11-26 14:12:13  [-] telegram: пропущено — The read operation timed out
+2026-11-26 14:12:13  [+] youtube: {'subscribers': 92300, 'views_total': 28256457, 'content_total': 815}
+2026-11-26 14:12:39  [-] site: пропущено — The read operation timed out
+2026-11-26 14:12:39  [=] Готово. Соцсетей собрано: 2. История: /home/runner/work/smm-dashboard/smm-dashboard/data/metrics_history.csv
